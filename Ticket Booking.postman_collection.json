@@ -1,0 +1,234 @@
+{
+	"id": "80dbcc09-6aff-4426-32aa-3fd098e7ddc5",
+	"name": "Ticket Booking",
+	"description": "",
+	"order": [
+		"67f679ea-7a17-19e7-40b3-4e140878a6ed",
+		"3f8190cd-8f9f-a2fb-5489-16debdf32a7d",
+		"f95ef2c1-3159-6f77-edb0-f1978e186fbd",
+		"ed976e4f-fb12-48e7-2224-813d1c0dcaa8",
+		"cde9c154-5c07-8237-cc99-4951c1eca33f",
+		"dbd458d1-d5ce-0c02-51bd-bb287fcc1bfb",
+		"a86bf810-cc15-f422-e16a-801ee53d241f"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1615670543854,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "3f8190cd-8f9f-a2fb-5489-16debdf32a7d",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8081/ticketBooking/authenticate/login/1.0.0",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "80dbcc09-6aff-4426-32aa-3fd098e7ddc5",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Login",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1615670587816,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\"username\":\"balaji\",\"password\":\"balaji\"}"
+		},
+		{
+			"id": "67f679ea-7a17-19e7-40b3-4e140878a6ed",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8081/ticketBooking/authenticate/signUp/1.0.0",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "80dbcc09-6aff-4426-32aa-3fd098e7ddc5",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Sign Up",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1615670564979,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"username\":\"balaji\",\n\t\"password\":\"balaji\",\n\t\"mobileNumber\":\"9790577011\",\n\t\"emailId\":\"balaji@gmail.com\"\n}"
+		},
+		{
+			"id": "a86bf810-cc15-f422-e16a-801ee53d241f",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8081/ticketBooking/tickets/ticketPayment/1.0.0",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "80dbcc09-6aff-4426-32aa-3fd098e7ddc5",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Payment",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1615670722787,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"sessionId\":\"D32C1965421A788E10A6E722EC07ED82\"\n}"
+		},
+		{
+			"id": "cde9c154-5c07-8237-cc99-4951c1eca33f",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8081/ticketBooking/tickets/getAvailableTickets/1.0.0",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1615670689775,
+			"name": "Get Available Tickets For User",
+			"description": "",
+			"collectionId": "80dbcc09-6aff-4426-32aa-3fd098e7ddc5",
+			"responses": [],
+			"rawModeData": "{\n\t\n}"
+		},
+		{
+			"id": "dbd458d1-d5ce-0c02-51bd-bb287fcc1bfb",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8081/ticketBooking/tickets/bookTicket/1.0.0",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1615670714611,
+			"name": "Book Ticket",
+			"description": "",
+			"collectionId": "80dbcc09-6aff-4426-32aa-3fd098e7ddc5",
+			"responses": [],
+			"rawModeData": "{\n\t\"seatCount\":3,\n\t\"movieId\":\"60b47260-843a-11eb-b5e0-112525eb7813\",\n\t\"userId\":\"a22d6bfa-8350-11eb-966f-4d7027f6f260\",\n\t\"hallId\":\"60b4725f-843a-11eb-b5e0-f57987803ea8\",\n\t\"seatNumbers\":[\"s1\",\"s2\",\"s3\",\"s4\"],\n\t\"showId\":\"60d65242-843a-11eb-b5e0-81d0b453ea4d\"\n}"
+		},
+		{
+			"id": "ed976e4f-fb12-48e7-2224-813d1c0dcaa8",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8081/ticketBooking/admin/getDetails/1.0.0",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "80dbcc09-6aff-4426-32aa-3fd098e7ddc5",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Get Whole Details",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1615670638261,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{}"
+		},
+		{
+			"id": "f95ef2c1-3159-6f77-edb0-f1978e186fbd",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8081/ticketBooking/admin/addHallAndMovieDetails/1.0.0",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "80dbcc09-6aff-4426-32aa-3fd098e7ddc5",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Add Movie Details (Admin)",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1615670614526,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\n\t\"cinemaHall\":\"AGS\",\n\t\"shows\":\"3\",\n\t\"movies\":\"Valimai\",\n\t\"numberOfSeats\":100,\n\t\"showTime\":[\"7:00\",\"10:30\",\"13:00\",\"17:00\"],\n\t\"ticketRate\":120,\n\t\"gst\":5\n\t\n}"
+		}
+	]
+}
