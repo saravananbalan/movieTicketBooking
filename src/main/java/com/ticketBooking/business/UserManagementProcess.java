@@ -14,10 +14,10 @@ import com.ticketBooking.common.DBConnection;
 
 public class UserManagementProcess {
 
-	public String addDetails(JSONObject requestObject, JSONObject dataObject) throws JSONException, SQLException {
+	public String addDetails(JSONObject requestObject, JSONObject dataObject) {
 
 		String query = "INSERT INTO dashboard_details (cinemahall,shows,movies,no_of_seats,available_seats,booked_seats,"
-				+ "hall_id,ticket_rate,cgst,sgst) values (?,?,?,?,?,?,?,?,?,?)";
+				+ "hall_id,ticket_rate,cgst,sgst,movie_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -29,18 +29,52 @@ public class UserManagementProcess {
 			pstmt.setInt(4, requestObject.getInt("numberOfSeats"));
 			pstmt.setInt(5, requestObject.getInt("numberOfSeats"));
 			pstmt.setInt(6, 0);
-			pstmt.setString(7, Generators.timeBasedGenerator().generate().toString());
+			String hallId = Generators.timeBasedGenerator().generate().toString();
+			String movieId = Generators.timeBasedGenerator().generate().toString();
+			pstmt.setString(7, hallId);
 			pstmt.setInt(8, requestObject.optInt("ticketRate"));
 			pstmt.setInt(9, requestObject.optInt("gst"));
 			pstmt.setInt(10, requestObject.optInt("gst"));
+			pstmt.setString(11, movieId);
 
 			pstmt.execute();
+
+			insertShowDetails(conn, hallId, movieId, requestObject.getJSONArray("showTime"));
+
+		} catch (SQLException | JSONException e) {
+			e.printStackTrace();
 		} finally {
 			DBConnection.closeStatement(pstmt);
 			DBConnection.closeConnection(conn);
 		}
 		return null;
 
+	}
+
+	private boolean insertShowDetails(Connection conn, String hallId, String movieId, JSONArray showTimes) {
+
+		String query = "INSERT INTO show_seat_details (hall_id,movieid,show_id,show_time,seat_numbers) values (?,?,?,?,?)";
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = conn.prepareStatement(query);
+			for (int i = 0; i < showTimes.length(); i++) {
+				pstmt.setString(1, hallId);
+				pstmt.setString(2, movieId);
+				pstmt.setString(3, Generators.timeBasedGenerator().generate().toString());
+				pstmt.setString(4, showTimes.getString(i));
+				pstmt.setString(5, "[]");
+
+				pstmt.execute();
+			}
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			DBConnection.closeStatement(pstmt);
+
+		}
 	}
 
 	public String updateDetails(JSONObject requestObject, JSONObject dataObject) throws JSONException, SQLException {

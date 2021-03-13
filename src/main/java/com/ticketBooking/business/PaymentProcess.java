@@ -26,6 +26,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,16 +71,19 @@ public class PaymentProcess {
 				String movieId = (String) userDetailsSession.getAttribute("movieId");
 				String userId = (String) userDetailsSession.getAttribute("userId");
 				String hallId = (String) userDetailsSession.getAttribute("hallId");
+				String showId = (String) userDetailsSession.getAttribute("showId");
+				JSONArray seatNumbers = (JSONArray) userDetailsSession.getAttribute("seatNumbers");
 				boolean isTicketBooked = false;
 
 				Connection conn = null;
 
 				conn = DBConnection.getInstance().getCon();
 
-				isTicketBooked = bookTicketForUser(conn, movieId, seatCount, userId, hallId);
+				isTicketBooked = bookTicketForUser(conn, movieId, seatCount, userId, hallId, showId, seatNumbers);
 				if (isTicketBooked) {
 					if (updateMoiveDetails(conn, seatCount, movieId, hallId)) {
-						geticketDetails(conn, movieId, userId, dataObject, hallId);
+						updateToOverAllSeats(conn, showId, seatNumbers);
+						geticketDetails(conn, movieId, userId, dataObject, showId, seatNumbers);
 					}
 				}
 
@@ -96,6 +100,23 @@ public class PaymentProcess {
 		return null;
 	}
 
+	private void updateToOverAllSeats(Connection conn, String showId, JSONArray seatNumbers) throws SQLException {
+		String UPDATE_CONSTANTS_QUERY = "update show_seat_details set seat_numbers= ? where show_id =?";
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(UPDATE_CONSTANTS_QUERY);
+
+			pstmt.setString(1, seatNumbers.toString());
+			pstmt.setString(2, showId);
+
+			pstmt.execute();
+
+		} finally {
+			DBConnection.closeStatement(pstmt);
+		}
+
+	}
+
 	class MyTask implements Callable<String> {
 		JSONObject paymentRequestObject = new JSONObject();
 
@@ -110,11 +131,12 @@ public class PaymentProcess {
 
 	}
 
-	private void geticketDetails(Connection conn, String movieId, String userId, JSONObject dataObject, String hallId) {
+	private void geticketDetails(Connection conn, String movieId, String userId, JSONObject dataObject, String showId,
+			JSONArray seatNumbers) {
 
 		String SELECT_VARIABLE_QUERY = "select bd.user_id,bd.booked_seats,das.cinemahall,das.ticket_rate,das.cgst,das.sgst,das.movies,das.shows "
-				+ "from booking_details as bd JOIN dashboard_details as das on bd.movieid =das.id where bd.id =(SELECT LAST_INSERT_ID()) "
-				+ "and bd.user_id =? and bd.movieid =? and bd.hall_id=?";
+				+ "from booking_details as bd JOIN dashboard_details as das on bd.movieid =das.movie_id where bd.user_id =? "
+				+ "and bd.movieid =? and bd.show_id=?";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		JSONObject ticketDetailsObject = new JSONObject();
@@ -122,7 +144,7 @@ public class PaymentProcess {
 			pstmt = conn.prepareStatement(SELECT_VARIABLE_QUERY);
 			pstmt.setString(1, userId);
 			pstmt.setString(2, movieId);
-			pstmt.setString(3, hallId);
+			pstmt.setString(3, showId);
 
 			rs = pstmt.executeQuery();
 
@@ -141,6 +163,7 @@ public class PaymentProcess {
 				ticketDetailsObject.put("price", price);
 				ticketDetailsObject.put("cgst", cgst);
 				ticketDetailsObject.put("sgst", sgst);
+				ticketDetailsObject.put("seatNumbers", seatNumbers);
 				ticketDetailsObject.put("totalPrice", calculateTicketRate(bookedSeats, price, cgst, sgst));
 			}
 		} catch (Exception e) {
@@ -166,7 +189,7 @@ public class PaymentProcess {
 	private boolean updateMoiveDetails(Connection conn, int seatCount, String movieId, String hallId)
 			throws SQLException {
 
-		String UPDATE_CONSTANTS_QUERY = "update dashboard_details, (select available_seats,booked_seats from dashboard_details where id=?) as dd set dashboard_details.available_seats = dd.available_seats - ?,dashboard_details.booked_seats= dd.booked_seats + ? where id =? and hall_id =?;";
+		String UPDATE_CONSTANTS_QUERY = "update dashboard_details, (select available_seats,booked_seats from dashboard_details where movie_id=?) as dd set dashboard_details.available_seats = dd.available_seats - ?,dashboard_details.booked_seats= dd.booked_seats + ? where movie_id =? and hall_id =?;";
 		PreparedStatement pstmt = null;
 		boolean result = false;
 		try {
@@ -179,7 +202,9 @@ public class PaymentProcess {
 			pstmt.setString(5, hallId);
 
 			pstmt.execute();
+
 			result = true;
+
 		} finally {
 			DBConnection.closeStatement(pstmt);
 		}
@@ -187,10 +212,10 @@ public class PaymentProcess {
 
 	}
 
-	private boolean bookTicketForUser(Connection conn, String movieId, int seatCount, String userId, String hallId)
-			throws JSONException, SQLException {
+	private boolean bookTicketForUser(Connection conn, String movieId, int seatCount, String userId, String hallId,
+			String showId, JSONArray seatNumbers) throws JSONException, SQLException {
 
-		String query = "INSERT INTO booking_details (user_id,movieid,booked_seats,hall_id) values (?,?,?,?)";
+		String query = "INSERT INTO booking_details (user_id,movieid,booked_seats,hall_id,seat_numbers,show_id,show_time) values (?,?,?,?,?,?,(select show_time from show_seat_details where show_id =?))";
 		PreparedStatement pstmt = null;
 		boolean result = false;
 		try {
@@ -199,15 +224,16 @@ public class PaymentProcess {
 			pstmt.setString(2, movieId);
 			pstmt.setInt(3, seatCount);
 			pstmt.setString(4, hallId);
+			pstmt.setString(5, seatNumbers.toString());
+			pstmt.setString(6, showId);
+			pstmt.setString(7, showId);
 
 			pstmt.execute();
 			result = true;
 		} finally {
 			DBConnection.closeStatement(pstmt);
-
 		}
 		return result;
-
 	}
 
 	private String payMoney(JSONObject requestObject) {
@@ -285,5 +311,4 @@ public class PaymentProcess {
 		}
 		return "success";
 	}
-
 }

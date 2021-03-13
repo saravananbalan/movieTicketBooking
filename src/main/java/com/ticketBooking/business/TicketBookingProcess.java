@@ -21,6 +21,8 @@ public class TicketBookingProcess {
 		String movieId = requestObject.getString("movieId");
 		String userId = requestObject.getString("userId");
 		String hallId = requestObject.getString("hallId");
+		String showId = requestObject.getString("showId");
+		JSONArray seatNumbers = requestObject.optJSONArray("seatNumbers");
 
 		if (seatCount == 7) {
 			return "Please Select seat upto 6";
@@ -37,14 +39,18 @@ public class TicketBookingProcess {
 					session.setAttribute("userId", userId);
 					session.setAttribute("seatCount", seatCount);
 					session.setAttribute("hallId", hallId);
+					session.setAttribute("showId", showId);
+					session.setAttribute("seatNumbers", seatNumbers);
 
 					String sessionId = session.getId();
 					OpenSessions.getInstance().addToOpenClientSessions(sessionId, session);
 
 					dataObject.put("sessionId", sessionId);
+					dataObject.put("seatNumbers", seatNumbers);
 					dataObject.put("availableSeatCountForUser", userTicketObject.getInt("availableTicetForUser"));
 
-					getPreBookTicketDetails(conn, movieId, seatCount, dataObject);
+					getPreBookTicketDetails(conn, movieId, seatCount, showId, dataObject, hallId);
+
 				} else {
 					return "user ticket limit exceeded for this movie.";
 				}
@@ -102,7 +108,7 @@ public class TicketBookingProcess {
 
 	public String getAvailableTickets(JSONObject requestObject, JSONObject dataObject) throws SQLException {
 
-		String SELECT_VARIABLE_QUERY = "select * from dashboard_details";
+		String SELECT_VARIABLE_QUERY = "select dd.*,ssd.show_time,ssd.show_id,ssd.seat_numbers from dashboard_details as dd JOIN show_seat_details as ssd on dd.movie_id = ssd.movieid;";
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -121,6 +127,9 @@ public class TicketBookingProcess {
 				dashboardDetailsObject.put("availableSeats", rs.getInt("available_seats"));
 				dashboardDetailsObject.put("bookedSeats", rs.getInt("booked_seats"));
 				dashboardDetailsObject.put("hallId", rs.getString("hall_id"));
+				dashboardDetailsObject.put("movieId", rs.getString("movie_id"));
+				dashboardDetailsObject.put("showId", rs.getString("show_id"));
+				dashboardDetailsObject.put("BookedseatNumbers", new JSONArray(rs.getString("seat_numbers")));
 
 				dashboardDetailsArray.put(dashboardDetailsObject);
 			}
@@ -144,11 +153,11 @@ public class TicketBookingProcess {
 		return totalPrice;
 	}
 
-	private void getPreBookTicketDetails(Connection conn, String movieId, int seatCount, JSONObject dataObject)
-			throws SQLException {
+	private void getPreBookTicketDetails(Connection conn, String movieId, int seatCount, String showId,
+			JSONObject dataObject, String hallId) throws SQLException {
 
 		String SELECT_VARIABLE_QUERY = "select ticket_rate,cgst,sgst,movies,shows from dashboard_details "
-				+ "where id =?";
+				+ "where movie_id =? and hall_id =?";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
@@ -157,6 +166,7 @@ public class TicketBookingProcess {
 
 			pstmt = conn.prepareStatement(SELECT_VARIABLE_QUERY);
 			pstmt.setString(1, movieId);
+			pstmt.setString(2, hallId);
 
 			rs = pstmt.executeQuery();
 
@@ -172,6 +182,7 @@ public class TicketBookingProcess {
 				ticketDetailsObject.put("cgst", cgst);
 				ticketDetailsObject.put("sgst", sgst);
 				ticketDetailsObject.put("totalPrice", calculateTicketRate(seatCount, price, cgst, sgst));
+
 			}
 		} finally {
 			DBConnection.closeResultSet(rs);
