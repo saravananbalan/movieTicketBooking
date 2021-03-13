@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>ticketBooking</display-name>
+	<listener>
+		<listener-class>com.ticketBooking.listeners.ApplicationContextListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>AddHallAndMovieDetails</servlet-name>
+		<servlet-class>com.ticketBooking.userManagementServices.AddHallAndMovieDetails</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddHallAndMovieDetails</servlet-name>
+		<url-pattern>/admin/addHallAndMovieDetails/1.0.0</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>GetDetails</servlet-name>
+		<servlet-class>com.ticketBooking.userManagementServices.GetDetails</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetDetails</servlet-name>
+		<url-pattern>/admin/getDetails/1.0.0</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>UpdateDetails</servlet-name>
+		<servlet-class>com.ticketBooking.userManagementServices.UpdateDetails</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateDetails</servlet-name>
+		<url-pattern>/admin/updateDetails/1.0.0</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>DeleteDetails</servlet-name>
+		<servlet-class>com.ticketBooking.userManagementServices.DeleteDetails</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DeleteDetails</servlet-name>
+		<url-pattern>/admin/deleteDetails/1.0.0</url-pattern>
+	</servlet-mapping>
+
+
+
+</web-app>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context reloadable="true" useHttpOnly="false">
+	<!-- Specify a JDBC mysql datasource -->
+
+	<Resource name="jdbc/TICKET" auth="Container"
+		type="javax.sql.DataSource" username="demo" password="password"
+		maxActive="100" maxIdle="30" maxWait="10000" initialSize="5"
+		minIdle="5" driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://localhost:3306/ticketBooking?autoReconnect=true"
+		connectionProperties="useUnicode=true;characterEncoding=utf8;"
+		validationQuery="SELECT 1" />
+
+</Context>
