@@ -41,12 +41,7 @@ public class DBConnection {
 		return instance;
 	}
 
-	/**
-	 * function to create a db connection to
-	 * 
-	 * @return
-	 * @throws SQLException
-	 */
+	
 	public Connection getCon() throws SQLException {
 		Connection c = datasource.getConnection();
 
@@ -55,12 +50,7 @@ public class DBConnection {
 		return c;
 	}
 
-	/**
-	 * function to create a db connection to msfsource
-	 * 
-	 * @return
-	 * @throws SQLException
-	 */
+	
 	public Connection getConnection() throws SQLException {
 
 		Connection c = datasource.getConnection();
@@ -88,11 +78,7 @@ public class DBConnection {
 
 	}
 
-	/**
-	 * General function to closing the Connection connection
-	 * 
-	 * @param connection
-	 */
+	
 	public static void closeConnection(Connection connection) {
 
 		if (connection != null) {
@@ -109,11 +95,7 @@ public class DBConnection {
 		}
 	}
 
-	/**
-	 * General function to closing the Statement st
-	 * 
-	 * @param st
-	 */
+	
 	public static void closeStatement(Statement st) {
 
 		if (st != null) {
@@ -130,11 +112,7 @@ public class DBConnection {
 		}
 	}
 
-	/**
-	 * General function to closing the Resultset rs
-	 * 
-	 * @param rs
-	 */
+	
 	public static void closeResultSet(ResultSet rs) {
 
 		if (rs != null) {
@@ -150,13 +128,7 @@ public class DBConnection {
 		}
 	}
 
-	/**
-	 * general function to create prepared statment
-	 * 
-	 * @param query
-	 * @param conn
-	 * @return
-	 */
+	
 	public static PreparedStatement createPreparedStatement(String query, Connection conn) {
 
 		PreparedStatement ps = null;
